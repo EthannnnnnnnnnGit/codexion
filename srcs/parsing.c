@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ethan <ethan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 15:13:40 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/03 16:53:21 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/04 21:39:10 by ethan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ bool	ft_isspace(char c)
 
 int	ft_atoll(char *param)
 {
-	int	i;
-	int	sign;
-	int	result;
+	int				i;
+	int				sign;
+	unsigned int	result;
 
 	i = 0;
 	sign = 1;
@@ -35,16 +35,18 @@ int	ft_atoll(char *param)
 		i++;
 	if (param[i] == "+" || param[i] == "-")
 	{
-		if (param[i] == "-")
+		if (param[i++] == "-")
 			sign = sign * -1;
-		i++;
 	}
-	while (param[i])
+	while (param[i] && param[i] >= "0" && param[i] <= "9")
 	{
-		return ;
+		result = (result * 10) + (param[i++] - "0");
+		if ((result > 2147483647 && sign == 1)
+			|| (result > 2147483648 && sign == -1))
+			return (-1);
 	}
+	return (result * sign);
 }
-
 
 void	main(void)
 {
