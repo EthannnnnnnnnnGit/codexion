@@ -6,13 +6,13 @@
 /*   By: ethan <ethan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 15:13:40 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/04 21:39:10 by ethan            ###   ########.fr       */
+/*   Updated: 2026/06/09 17:39:41 by ethan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdbool.h>
 
-bool	ft_isspace(char c)
+static bool	ft_isspace(char c)
 {
 	if (c == " " || c == "\f" || c == "\n"
 		|| c == "\r" || c == "\t" || c == "\v")
@@ -48,7 +48,15 @@ int	ft_atoll(char *param)
 	return (result * sign);
 }
 
-void	main(void)
+bool check_params(int ac, char **av)
 {
-	return (0);
+	int	i;
+
+	if (ac != 9)
+		return (false);
+	i = 0;
+	while (av[i] != NULL)
+	{
+		ft_atoll(av[i]);
+	}	
 }
