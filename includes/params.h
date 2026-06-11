@@ -1,23 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   params.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/06/10 08:49:16 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/11 08:49:09 by eel-kerc         ###   ########.fr       */
+/*   Created: 2026/06/11 08:32:45 by eel-kerc          #+#    #+#             */
+/*   Updated: 2026/06/11 08:50:49 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/parsing.h"
-#include "../includes/params.h"
+#ifndef PARAMS_H
+# define PARAMS_H
 
-int	main(int ac, char **av)
+void	get_params(char	**av, t_params params);
+
+typedef struct s_params
 {
-	t_params	params;
+	int	nb_of_coders;
+	int	time_burnout;
+	int	time_compile;
+	int	time_debug;
+	int	time_refactor;
+	int	nb_compiles;
+	int	dongle_cooldown;
+	char	*scheduler;
 
-	if (!check_params(ac, av))
-		return (0);
-	get_params(&av[1], params);
-}
+}	t_params;
+
+
+#endif

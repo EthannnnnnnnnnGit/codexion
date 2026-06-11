@@ -1,23 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   simulation.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/06/10 08:49:16 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/11 08:49:09 by eel-kerc         ###   ########.fr       */
+/*   Created: 2026/06/11 10:34:14 by eel-kerc          #+#    #+#             */
+/*   Updated: 2026/06/11 10:34:14 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/parsing.h"
-#include "../includes/params.h"
+#ifndef SIMULATION_H
+# define SIMULATION_H
 
-int	main(int ac, char **av)
-{
-	t_params	params;
 
-	if (!check_params(ac, av))
-		return (0);
-	get_params(&av[1], params);
-}
+
+
+#endif 

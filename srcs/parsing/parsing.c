@@ -3,24 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ethan <ethan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 15:13:40 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/09 17:39:41 by ethan            ###   ########.fr       */
+/*   Updated: 2026/06/10 10:01:49 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdbool.h>
+#include "parsing.h"
 
-static bool	ft_isspace(char c)
-{
-	if (c == " " || c == "\f" || c == "\n"
-		|| c == "\r" || c == "\t" || c == "\v")
-		return (true);
-	return (false);
-}
-
-int	ft_atoll(char *param)
+static bool	is_valid_number(char *param, const char *error)
 {
 	int				i;
 	int				sign;
@@ -29,34 +21,56 @@ int	ft_atoll(char *param)
 	i = 0;
 	sign = 1;
 	result = 0;
-	if (param == "NULL")
-		return (-1);
-	while (param[i] && ft_isspace(param[i]))
-		i++;
-	if (param[i] == "+" || param[i] == "-")
+	if (param[i] == '+' || param[i] == '-')
 	{
-		if (param[i++] == "-")
-			sign = sign * -1;
+		if (param[i++] == '-')
+			sign *= -1;
 	}
-	while (param[i] && param[i] >= "0" && param[i] <= "9")
+	while (param[i])
 	{
-		result = (result * 10) + (param[i++] - "0");
-		if ((result > 2147483647 && sign == 1)
-			|| (result > 2147483648 && sign == -1))
-			return (-1);
+		if (!(param[i] >= '0' && param[i] <= '9'))
+		{
+			fprintf(stderr, "%s should be a valid number\n", error);
+			return (false);
+		}
+		result = (result * 10) + (param[i++] - '0');
+		if ((result * sign > 2147483647) || (result * sign < 0))
+		{
+			fprintf(stderr, "%s should be between 0 and "
+				"INT_MAX (2147483647)\n", error);
+			return (false);
+		}
 	}
-	return (result * sign);
+	return (true);
 }
 
-bool check_params(int ac, char **av)
+bool	check_params(int ac, char **av)
 {
-	int	i;
+	int			i;
+	const char	*errors[] = {"Number of coders", "Time_to_burnout",
+		"Time_to_compile", "Time to debug", "Time to refactor",
+		"Number of compiles required", "Dongle cooldown"};
 
 	if (ac != 9)
-		return (false);
-	i = 0;
-	while (av[i] != NULL)
 	{
-		ft_atoll(av[i]);
-	}	
+		fprintf(stderr, "Invalid number of args. Args should be in the following "
+			"format: number_of_coders time_to_burnout time_to_compile time_to_debug "
+			"time_to_refactor number_of_compiles_required dongle_cooldown scheduler\n");
+		return (false);
+	}
+	if (!strcmp(av[1], "0") || !strcmp(av[1], "-0"))
+		fprintf(stderr, "Number of coders should be at least one\n");
+	i = 1;
+	while (i < 8)
+	{
+		if (!is_valid_number(av[i], errors[i - 1]))
+			return (false);
+		i++;
+	}
+	if (strcmp("edf", av[8]) && strcmp("fifo", av[8]))
+	{
+		fprintf(stderr, "Scheduler should be either \"edf\" or \"fifo\"\n");
+		return (false);
+	}
+	return (true);
 }
