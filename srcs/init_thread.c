@@ -3,18 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   init_thread.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ethan <ethan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 10:10:42 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/11 10:31:11 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/12 23:43:23 by ethan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/coders.h"
 #include "../includes/params.h"
+#include "../includes/simulation.h"
 
 
-void	lunch_coders(t_coder **coders)
+static void	lunch_coders(t_coder **coders)
 {
 	int	i;
 
@@ -24,6 +25,16 @@ void	lunch_coders(t_coder **coders)
 		pthread_join(coders[i], NULL);
 		i++;
 	}
+}
+
+static void init_coders(int i, t_coder *coders, t_params *params)
+{
+	coders->id = i + 1;
+	coders->compile = params->time_compile;
+	coders->debug = params->time_debug;
+	coders->refactor = params->time_refactor;
+	coders->compiles_required = params->nb_compiles;
+	coders->nb_compiled = 0;
 }
 
 t_coder	init_coders(t_params *params)
@@ -41,13 +52,8 @@ t_coder	init_coders(t_params *params)
 	i = 0;
 	while (i < params->nb_of_coders)
 	{
-		coders[i]->id = i + 1;
-		coders[i]->compile = params->time_compile;
-		coders[i]->debug = params->time_debug;
-		coders[i]->refactor = params->time_refactor;
-		coders[i]->compiles_required = params->nb_compiles;
-		coders[i]->nb_compiled = 0;
-		if (pthread_create(coders[i]->coder, NULL, init_coders, NULL))
+		init_coders(i, coders[i], params);
+		if (pthread_create(coders[i]->coder, NULL, simulation, NULL))
 			return ;
 		i++;
 	}
