@@ -6,11 +6,11 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 15:13:40 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/10 10:01:49 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/16 17:41:25 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "../../includes/parsing.h"
 
 static bool	is_valid_number(char *param, const char *error)
 {

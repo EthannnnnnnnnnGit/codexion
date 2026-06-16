@@ -6,12 +6,11 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 08:36:52 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/11 08:49:24 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/16 17:41:29 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/params.h"
-
+#include "../../includes/params.h"
 
 static int	get_number(char *s)
 {
@@ -24,8 +23,8 @@ static int	get_number(char *s)
 		i++;
 	while (s[i])
 	{
-		res = (res * 10) + (s[i]- '0');
-		i++; 
+		res = (res * 10) + (s[i] - '0');
+		i++;
 	}
 	return (res);
 }

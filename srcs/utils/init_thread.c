@@ -1,0 +1,87 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_thread.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/10 10:10:42 by eel-kerc          #+#    #+#             */
+/*   Updated: 2026/06/16 17:41:40 by eel-kerc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../includes/coders.h"
+#include "../../includes/params.h"
+#include "../../includes/simulation.h"
+#include "../../includes/utils.h"
+#include <sys/time.h>
+
+static void	link_dongle(t_coder **coders)
+{
+	int	i;
+
+	i = 0;
+	while (coders[i + 1])
+	{
+		coders[i + 1]->second_dongle = coders[i]->first_dongle;
+		i++;
+	}
+	coders[0]->second_dongle = coders[i]->first_dongle;
+}
+
+static void	init_coder(int i, t_coder *coder, t_global *global)
+{
+	coder->id = i + 1;
+	coder->nb_compiled = 0;
+	coder->global = global;
+	coder->first_dongle = malloc(sizeof(t_dongle));
+	memset(coder->first_dongle->queue, 0, 2);
+	if (!coder->first_dongle)
+		return ;
+	if (pthread_create(coder->coder, NULL, simulation, coder))
+		return ;
+	if (pthread_mutex_init(coder->first_dongle->mutex_dongle, NULL))
+		return ;
+	if (pthread_mutex_init(coder->first_dongle->mutex_queue, NULL))
+		return ;
+}
+
+static void	init_global(t_global *global, t_params	*params)
+{
+	global->burnout = params->time_burnout;
+	global->compile = params->time_compile;
+	global->debug = params->time_debug;
+	global->refactor = params->time_refactor;
+	global->compiles_required = params->nb_compiles;
+	global->time = gettimeofday(NULL, NULL);
+	if (strcmp(global->scheduler, "fifo"))
+		global->scheduler = fifo;
+	else
+		global->scheduler = edf;
+	if (pthread_mutex_init(global->print_mutex, NULL))
+		return ;
+}
+
+t_coder	initialization(t_params *params)
+{
+	t_coder		**coders;
+	t_coder		*monitor;
+	t_global	*global;
+	int			i;
+
+	monitor = malloc(sizeof(t_coder));
+	if (!monitor)
+		return ;
+	coders = malloc(sizeof(t_coder) * params->nb_of_coders);
+	if (!coders)
+		return ;
+	global = malloc(sizeof(t_global));
+	if (!global)
+		return ;
+	i = 0;
+	init_global(global, params);
+	while (i < params->nb_of_coders)
+		init_coders(coders[i++], params);
+	coders[i] = NULL;
+	link_dongles(coders);
+}
