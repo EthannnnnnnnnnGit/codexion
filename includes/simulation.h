@@ -3,18 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ethan <ethan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 10:34:14 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/14 22:33:48 by ethan            ###   ########.fr       */
+/*   Updated: 2026/06/16 17:34:13 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SIMULATION_H
 # define SIMULATION_H
 
-#include "../includes/coders.h"
+# include "../includes/coders.h"
+#include <sys/time.h>
 
 void	simulation(t_coder *coder);
+void	edf(t_coder *coder, t_dongle *dongle);
+void	fifo(t_coder *coder, t_dongle *dongle);
 
 #endif 

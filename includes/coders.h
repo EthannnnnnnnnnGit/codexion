@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coders.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ethan <ethan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 08:28:27 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/14 22:35:23 by ethan            ###   ########.fr       */
+/*   Updated: 2026/06/15 16:51:15 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,10 @@ typedef struct s_coder
 	int			id;
 	int			last_compiled;
 	int			nb_compiled;
-	t_dongle	r_dongle;
-	t_dongle	l_dongle;
-	pthread_t	coder;
+	t_dongle	*first_dongle;
+	t_dongle	*second_dongle;
+	pthread_t	*coder;
+	t_global	*global;
 }	t_coder;
 
 #endif
