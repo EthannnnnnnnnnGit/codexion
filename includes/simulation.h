@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 10:34:14 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/16 17:34:13 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/17 14:29:48 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@
 # include "../includes/coders.h"
 #include <sys/time.h>
 
-void	simulation(t_coder *coder);
+void	*simulation(void *arg);
 void	edf(t_coder *coder, t_dongle *dongle);
 void	fifo(t_coder *coder, t_dongle *dongle);
+int		get_time(int start);
 
 #endif 

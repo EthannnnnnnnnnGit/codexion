@@ -6,11 +6,12 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/16 16:25:14 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/16 17:40:58 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/17 11:28:29 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/coders.h"
+#include "../../includes/utils.h"
 
 void	edf(t_coder *coder, t_dongle *dongle)
 {

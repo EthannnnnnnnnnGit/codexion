@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 08:36:52 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/16 17:41:29 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/17 11:04:20 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	get_number(char *s)
 
 	i = 0;
 	res = 0;
-	if (s[i] == '+' || s[i] == "-")
+	if (s[i] == '+' || s[i] == '-')
 		i++;
 	while (s[i])
 	{
@@ -29,14 +29,14 @@ static int	get_number(char *s)
 	return (res);
 }
 
-void	get_params(char	**av, t_params params)
+void	get_params(char	**av, t_params *params)
 {
-	params.nb_of_coders = get_number(av[0]);
-	params.time_burnout = get_number(av[1]);
-	params.time_compile = get_number(av[2]);
-	params.time_debug = get_number(av[3]);
-	params.time_refactor = get_number(av[4]);
-	params.nb_compiles = get_number(av[5]);
-	params.dongle_cooldown = get_number(av[6]);
-	params.scheduler = av[7];
+	params->nb_of_coders = get_number(av[0]);
+	params->time_burnout = get_number(av[1]);
+	params->time_compile = get_number(av[2]);
+	params->time_debug = get_number(av[3]);
+	params->time_refactor = get_number(av[4]);
+	params->nb_compiles = get_number(av[5]);
+	params->dongle_cooldown = get_number(av[6]);
+	params->scheduler = av[7];
 }

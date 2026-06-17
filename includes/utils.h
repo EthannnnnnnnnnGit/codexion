@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/15 17:30:34 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/16 17:36:25 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/17 14:21:23 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 
 # include <pthread.h>
 # include <string.h>
+# include <stdlib.h>
+# include "coders.h"
+# include "params.h"
 
 typedef struct s_global
 {
@@ -24,8 +27,9 @@ typedef struct s_global
 	int				refactor;
 	int				compiles_required;
 	void			(*scheduler)(t_coder *, t_dongle *);
-	int				time;
+	unsigned int	time;
 	pthread_mutex_t	*print_mutex;
+	pthread_cond_t	*start_cond;
 }	t_global;
 
 typedef struct s_dongle
@@ -34,5 +38,7 @@ typedef struct s_dongle
 	pthread_mutex_t	*mutex_queue;
 	pthread_mutex_t	*mutex_dongle;
 }	t_dongle;
+
+void	initialization(t_params *params, t_coder **coders, pthread_t *monitor);
 
 #endif

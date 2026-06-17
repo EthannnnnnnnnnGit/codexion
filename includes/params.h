@@ -6,14 +6,12 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 08:32:45 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/15 17:32:28 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/17 11:04:07 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARAMS_H
 # define PARAMS_H
-
-void	get_params(char	**av, t_params params);
 
 typedef struct s_params
 {
@@ -27,5 +25,7 @@ typedef struct s_params
 	char	*scheduler;
 
 }	t_params;
+
+void	get_params(char	**av, t_params *params);
 
 #endif
