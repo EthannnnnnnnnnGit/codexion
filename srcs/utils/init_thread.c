@@ -6,12 +6,12 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 10:10:42 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/17 16:53:55 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/18 16:30:48 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/coders.h"
-#include "../../includes/params.h"
+#include "../../includes/parsing.h"
 #include "../../includes/simulation.h"
 #include "../../includes/utils.h"
 #include <sys/time.h>
@@ -35,6 +35,7 @@ static void	init_coder(int i, t_coder *coder, t_global *global)
 	coder->nb_compiled = 0;
 	coder->global = global;
 	coder->first_dongle = malloc(sizeof(t_dongle));
+	coder->coder = malloc(sizeof(pthread_t));
 	memset(coder->first_dongle->queue, 0, 2);
 	coder->first_dongle->mutex_dongle = malloc(sizeof(pthread_mutex_t));
 	coder->first_dongle->mutex_queue = malloc(sizeof(pthread_mutex_t));
@@ -50,19 +51,21 @@ static void	init_coder(int i, t_coder *coder, t_global *global)
 
 static void	init_global(t_global *global, t_params	*params, pthread_cond_t *start)
 {
-	global->burnout = params->time_burnout;
-	global->compile = params->time_compile;
-	global->debug = params->time_debug;
-	global->refactor = params->time_refactor;
-	global->compiles_required = params->nb_compiles;
+	pthread_cond_t	burn_cond;
+
+	global->params = params;
 	global->start_cond = start;
+	global->has_burnout = 0;
 	global->print_mutex = malloc(sizeof(pthread_mutex_t));
 	if (strcmp(params->scheduler, "fifo"))
 		global->scheduler = fifo;
 	else
 		global->scheduler = edf;
+	if (pthread_cond_init(&burn_cond, NULL))
+		return ;
 	if (pthread_mutex_init(global->print_mutex, NULL))
 		return ;
+	global->burn_cond = &burn_cond;
 }
 
 void	initialization(t_params *params, t_coder **coders, pthread_t *monitor)
@@ -74,7 +77,7 @@ void	initialization(t_params *params, t_coder **coders, pthread_t *monitor)
 	monitor = malloc(sizeof(pthread_t));
 	if (!monitor)
 		return ;
-	coders = malloc(sizeof(t_coder *) * params->nb_of_coders + 1);
+	*coders = malloc(sizeof(t_coder *) * params->nb_of_coders + 1);
 	if (!coders)
 		return ;
 	global = malloc(sizeof(t_global));
@@ -84,10 +87,8 @@ void	initialization(t_params *params, t_coder **coders, pthread_t *monitor)
 		return ;
 	i = 0;
 	init_global(global, params, &start_cond);
-	printf("%i", params->nb_of_coders);
 	while (i < params->nb_of_coders)
 	{
-		coders[i] = malloc(sizeof(t_coder));
 		init_coder(i, coders[i], global);
 		i++;
 	}

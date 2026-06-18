@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/15 17:30:34 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/17 14:21:23 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/18 16:25:34 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,19 @@
 # include <pthread.h>
 # include <string.h>
 # include <stdlib.h>
+# include "parsing.h"
 # include "coders.h"
-# include "params.h"
+# include <stdbool.h>
 
 typedef struct s_global
 {
-	int				burnout;
-	int				compile;
-	int				debug;
-	int				refactor;
-	int				compiles_required;
+	t_params		*params;
 	void			(*scheduler)(t_coder *, t_dongle *);
 	unsigned int	time;
+	int				has_burnout;
 	pthread_mutex_t	*print_mutex;
 	pthread_cond_t	*start_cond;
+	pthread_cond_t	*burn_cond;
 }	t_global;
 
 typedef struct s_dongle

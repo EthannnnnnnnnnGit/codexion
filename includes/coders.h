@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 08:28:27 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/17 11:03:24 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/18 16:39:57 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ typedef struct s_global t_global;
 
 typedef struct s_coder
 {
-	int				id;
-	int				last_compiled;
-	int				nb_compiled;
+	unsigned int	id;
+	unsigned int	last_compiled;
+	unsigned int	nb_compiled;
 	t_dongle		*first_dongle;
 	t_dongle		*second_dongle;
 	pthread_t		*coder;
