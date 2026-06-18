@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_thread.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ethan <ethan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 10:10:42 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/18 16:30:48 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/18 22:22:37 by ethan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ void	initialization(t_params *params, t_coder **coders, pthread_t *monitor)
 	init_global(global, params, &start_cond);
 	while (i < params->nb_of_coders)
 	{
+		coders[i] = malloc(sizeof(t_coder));
 		init_coder(i, coders[i], global);
 		i++;
 	}
