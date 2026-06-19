@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 10:34:12 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/18 16:41:25 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/19 17:15:54 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,25 @@
 #include "utils.h"
 #include "simulation.h"
 
-struct timespec	*get_burnout_time(t_coder *coder)
+void	get_burnout_time(t_coder *coder, struct timespec *time)
 {
-	struct timespec	*time;
 	struct timeval	tv;
 	int				burnout;
 
 	burnout = (coder->global->params->time_burnout -
-		get_time(coder->global->time) - coder->last_compiled);
-	gettimeofday(&tv, NULL);
-	time = malloc(sizeof(struct timespec));
+		(get_time(coder->global->time) - coder->last_compiled));
+	if (gettimeofday(&tv, NULL) == -1 || burnout < 0)
+	{
+		time->tv_nsec = 0;
+		time->tv_sec = 0;
+		return ;
+	}
 	time->tv_sec = tv.tv_sec;
 	time->tv_nsec = (tv.tv_usec * 1000) + (burnout * 1000000);
 	if (time->tv_nsec >= 1000000000) {
  		time->tv_sec += 1;
     	time->tv_nsec -= 1000000000;
 	}
-	return (time);
 }
 
 
@@ -39,12 +41,12 @@ unsigned int	get_time(unsigned int start)
 	struct timeval	tv;
 	unsigned int	time;
 
-	if (gettimeofday(&tv, NULL))
-		return (get_time(start));
+	if (gettimeofday(&tv, NULL) == -1)
+		return (0);
 	time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	if (!start)
 		return (time);
-	return (start - time);
+	return (time - start);
 }
 
 void	compiling(t_coder *coder)
@@ -82,12 +84,15 @@ void	refactoring(t_coder *coder)
 
 int	take_dongle(t_coder *coder)
 {
+	struct timespec	time_burnout;
+	
 	coder->global->scheduler(coder, coder->first_dongle);
 	pthread_mutex_lock(coder->first_dongle->mutex_dongle);
 	while (coder != coder->first_dongle->queue[0])
 	{
+		get_burnout_time(coder, &time_burnout);
 		pthread_cond_timedwait(coder->global->burn_cond, 
-			coder->first_dongle->mutex_dongle, get_burnout_time(coder));
+			coder->first_dongle->mutex_dongle, &time_burnout);
 		if (get_time(coder->global->time) - coder->last_compiled >= coder->global->params->time_burnout)
 			return (1);
 	}
@@ -97,7 +102,11 @@ int	take_dongle(t_coder *coder)
 	coder->global->scheduler(coder, coder->second_dongle);
 	while (coder != coder->second_dongle->queue[0])
 	{
-
+		get_burnout_time(coder, &time_burnout);
+		pthread_cond_timedwait(coder->global->burn_cond, 
+			coder->second_dongle->mutex_dongle, &time_burnout);
+		if (get_time(coder->global->time) - coder->last_compiled >= coder->global->params->time_burnout)
+			return (1);
 	}
 	pthread_mutex_lock(coder->second_dongle->mutex_dongle);
 	pthread_mutex_lock(coder->global->print_mutex);
@@ -112,7 +121,9 @@ void	*simulation(void *arg)
 	t_coder	*coder;
 
 	coder = (t_coder *)arg;
+	pthread_mutex_lock(coder->global->print_mutex);
 	pthread_cond_wait(coder->global->start_cond, coder->global->print_mutex);
+	pthread_mutex_unlock(coder->global->print_mutex);
 	while (coder->global->params->nb_compiles > coder->nb_compiled)
 	{
 		if (take_dongle(coder))

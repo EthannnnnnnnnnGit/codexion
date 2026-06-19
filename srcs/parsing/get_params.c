@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 08:36:52 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/18 16:51:16 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/19 14:42:39 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	get_params(char	**av, t_params *params)
 	params->time_debug = get_number(av[3]);
 	params->time_refactor = get_number(av[4]);
 	params->nb_compiles = get_number(av[5]);
-	printf("%i", params->nb_compiles);
 	params->dongle_cooldown = get_number(av[6]);
 	params->scheduler = av[7];
 }
