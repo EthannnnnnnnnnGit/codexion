@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ethan <ethan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 10:34:12 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/19 17:15:54 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/20 09:24:32 by ethan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ void	get_burnout_time(t_coder *coder, struct timespec *time)
 
 	burnout = (coder->global->params->time_burnout -
 		(get_time(coder->global->time) - coder->last_compiled));
-	if (gettimeofday(&tv, NULL) == -1 || burnout < 0)
+	// printf("%i", burnout);
+	if (gettimeofday(&tv, NULL) == -1 || burnout <= 0)
 	{
 		time->tv_nsec = 0;
 		time->tv_sec = 0;
@@ -93,6 +94,7 @@ int	take_dongle(t_coder *coder)
 		get_burnout_time(coder, &time_burnout);
 		pthread_cond_timedwait(coder->global->burn_cond, 
 			coder->first_dongle->mutex_dongle, &time_burnout);
+		printf("%i", get_time(coder->global->time) - coder->last_compiled);
 		if (get_time(coder->global->time) - coder->last_compiled >= coder->global->params->time_burnout)
 			return (1);
 	}
@@ -100,6 +102,7 @@ int	take_dongle(t_coder *coder)
 	printf("%i %i has taken a dongle\n", get_time(coder->global->time), coder->id);
 	pthread_mutex_unlock(coder->global->print_mutex);
 	coder->global->scheduler(coder, coder->second_dongle);
+	pthread_mutex_lock(coder->second_dongle->mutex_dongle);
 	while (coder != coder->second_dongle->queue[0])
 	{
 		get_burnout_time(coder, &time_burnout);
@@ -108,8 +111,7 @@ int	take_dongle(t_coder *coder)
 		if (get_time(coder->global->time) - coder->last_compiled >= coder->global->params->time_burnout)
 			return (1);
 	}
-	pthread_mutex_lock(coder->second_dongle->mutex_dongle);
-	pthread_mutex_lock(coder->global->print_mutex);
+	pthread_mutex_lock(coder->global->print_mutex);	
 	printf("%i %i has taken a dongle\n", get_time(coder->global->time), coder->id);
 	pthread_mutex_unlock(coder->global->print_mutex);
 	return (0);

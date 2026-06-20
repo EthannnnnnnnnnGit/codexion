@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_thread.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ethan <ethan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 10:10:42 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/19 15:24:45 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/20 01:09:00 by ethan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ static void	init_global(t_global *global, t_params	*params, pthread_cond_t *star
 	global->start_cond = start;
 	global->has_burnout = 0;
 	global->print_mutex = malloc(sizeof(pthread_mutex_t));
+	global->time = 0;
 	if (!strcmp(params->scheduler, "fifo"))
 		global->scheduler = fifo;
 	else
