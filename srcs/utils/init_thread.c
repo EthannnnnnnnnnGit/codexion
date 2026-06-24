@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 10:10:42 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/23 18:16:12 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/24 10:46:43 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,16 +76,12 @@ static void	init_global(t_global *global, t_params	*params)
 	global->time = get_time(0);
 }
 
-void	initialization(t_params *params, t_coder **coders)
+void	initialization(t_params *params, t_coder **coders, pthread_t *monitor)
 {
 	t_global		*global;
 	int				i;
 
-	// monitor = malloc(sizeof(pthread_t));
-	// if (!monitor)
-	// 	return ;
-	// *coders = malloc(sizeof(t_coder *) * params->nb_of_coders + 1);
-	if (!coders)
+	if (pthread_create(monitor, NULL, monitoring, *coders))
 		return ;
 	global = malloc(sizeof(t_global));
 	if (!global)
