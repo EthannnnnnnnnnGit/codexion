@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 10:34:12 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/23 17:41:02 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/24 09:51:00 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,19 +88,20 @@ int	taking(t_coder *coder, t_dongle *dongle)
 	struct timespec	time_burnout;
 
 	coder->global->scheduler(coder, dongle);
-	pthread_mutex_lock(dongle->mutex_dongle);
+	pthread_mutex_lock(dongle->mutex_queue);
 	while (coder != dongle->queue[0])
 	{
 		get_burnout_time(coder, &time_burnout);
-		printf("%p\n", dongle->queue[0]);
 		pthread_cond_timedwait(&coder->global->burn_cond,
-			dongle->mutex_dongle, &time_burnout);
+			dongle->mutex_queue, &time_burnout);
 		if (get_time(coder->global->time) - coder->last_compiled >= coder->global->params->time_burnout)
 		{
-			pthread_mutex_unlock(dongle->mutex_dongle);
+			pthread_mutex_unlock(dongle->mutex_queue);
 			return (1);
 		}
 	}
+	pthread_mutex_unlock(dongle->mutex_queue);
+	pthread_mutex_lock(dongle->mutex_dongle);
 	pthread_mutex_lock(&coder->global->print_mutex);
 	printf("%lli %i has taken a dongle\n", get_time(coder->global->time), coder->id);
 	pthread_mutex_unlock(&coder->global->print_mutex);
