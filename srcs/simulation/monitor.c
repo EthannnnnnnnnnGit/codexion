@@ -6,48 +6,65 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/24 09:33:01 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/24 10:47:29 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/26 16:50:43 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
 #include "simulation.h"
 
-void	stop_coders(t_coder *coders)
+void	wait_coders(t_coder *coders)
 {
-	return ;
+	int	i;
+
+	i = 0;
+	while (i < coders[0].global->params->nb_of_coders)
+	{
+		pthread_join(coders[i].coder, NULL);
+		i++;
+	}
 }
 
 static int	detect_burnout(t_coder *coders)
 {
-	static int	finished = 0;
+	int	finished;
 	int			i;
 
 	i = 0;
-	while (&coders[i])
+	finished = 0;
+	while (i < coders[0].global->params->nb_of_coders)
 	{
 		if (get_time(coders[i].global->time) - coders[i].last_compiled > coders[i].global->params->time_burnout)
 		{
 			pthread_mutex_lock(&coders[i].global->print_mutex);
 			printf("%lli %i has burnout\n", get_time(coders[i].global->time), coders[i].id);
-			stop_coders(coders);
+			coders[0].global->has_burnout = true;
+			wait_coders(coders);
+			printf("here");
 			pthread_mutex_unlock(&coders[i].global->print_mutex);
-			return ;
+			return (1);
 		}
+		if (coders[i].nb_compiled >= coders[i].global->params->nb_compiles)
+			finished++;
+		i++;
 	}
 	if (finished == i + 1)
-		stop_coders(coders);
+	{
+		wait_coders(coders);
+		return (1);
+	}
+	return (0);
 }
 
-void	monitoring(void *arg)
+void	*monitoring(void *arg)
 {
 	t_coder		*coders;
 
 	coders = (t_coder *)arg;
 	while (1)
 	{
-		pthread_cond_wait(&coders[0].global->has_burnout);
-		if (simulation_stopped(coders))
-			return ;
+		if (detect_burnout(coders))
+			return (NULL);
 	}
+	return (NULL);
 }

@@ -6,7 +6,7 @@
 #    By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/08 10:39:26 by zqian             #+#    #+#              #
-#    Updated: 2026/06/17 16:25:52 by eel-kerc         ###   ########.fr        #
+#    Updated: 2026/06/25 17:39:23 by eel-kerc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,8 @@ parsing/get_params.c
 
 SIMULATION_SRCS = \
 simulation/schedulers.c \
-simulation/simulation.c
+simulation/simulation.c \
+simulation/monitor.c
 
 UTILS_SRCS = \
 utils/init_thread.c

@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/15 17:30:34 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/23 18:15:51 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/26 15:37:00 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@
 # include "coders.h"
 # include <stdbool.h>
 
+typedef struct s_dongle	t_dongle;
+typedef struct s_global	t_global;
+typedef struct s_coder t_coder;
+
 typedef struct s_global
 {
 	t_params		*params;
@@ -28,17 +32,31 @@ typedef struct s_global
 	int				has_burnout;
 	bool			started;
 	pthread_mutex_t	print_mutex;
+	pthread_mutex_t	start_mutex;
 	pthread_cond_t	start_cond;
 	pthread_cond_t	burn_cond;
 }	t_global;
 
 typedef struct s_dongle
 {
+	int					cooldown;
 	t_coder				*queue[2];
-	pthread_mutex_t		*mutex_queue;
-	pthread_mutex_t		*mutex_dongle;
+	pthread_cond_t		dongle_cond;
+	pthread_mutex_t		mutex_queue;
+	pthread_mutex_t		mutex_dongle;
 }	t_dongle;
 
-void	initialization(t_params *params, t_coder **coders);
+typedef struct s_coder
+{
+	unsigned int	id;
+	long long		last_compiled;
+	unsigned int	nb_compiled;
+	t_dongle		*first_dongle;
+	t_dongle		*second_dongle;
+	pthread_t		coder;
+	t_global		*global;
+}	t_coder;
+
+void	initialization(t_params *params, t_coder *coders, pthread_t *monitor);
 
 #endif
