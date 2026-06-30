@@ -2,7 +2,9 @@
 
 
 ## Description
-
+```
+Codexion is a 42 project made to understand multi-threading. It's a thread simulation of 
+```
 
 ## Instructions
 

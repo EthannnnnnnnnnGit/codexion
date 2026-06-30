@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 08:49:16 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/26 15:59:37 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/06/30 16:05:53 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,6 @@
 #include "coders.h"
 #include "utils.h"
 #include <stdlib.h>
-
-void	join_coder(t_coder *coders, pthread_t monitor)
-{
-	int	i;
-
-	i = 0;
-	while (i < coders[0].global->params->nb_of_coders)
-	{
-		pthread_join(coders[i].coder, NULL);
-		i++;
-	}
-	pthread_join(monitor, NULL);
-}
 
 void	free_and_destroys(t_coder *coders)
 {
@@ -36,15 +23,17 @@ void	free_and_destroys(t_coder *coders)
 	i = 0;
 	max = coders[0].global->params->nb_of_coders;
 	pthread_cond_destroy(&coders[0].global->start_cond);
-	pthread_cond_destroy(&coders[0].global->burn_cond);
 	pthread_mutex_destroy(&coders[0].global->print_mutex);
 	free(coders[0].global);
 	while (i < max)
 	{
+		pthread_mutex_destroy(&coders[i].first_dongle->mutex_cooldown);
 		pthread_mutex_destroy(&coders[i].first_dongle->mutex_dongle);
 		pthread_mutex_destroy(&coders[i].first_dongle->mutex_queue);
+		pthread_mutex_destroy(&coders[i].mutex_compile);
 		pthread_cond_destroy(&coders[i].first_dongle->dongle_cond);
 		free(coders[i].first_dongle);
+		free(coders[i].coder);
 		i++;
 	}
 	free(coders);
@@ -61,6 +50,6 @@ int	main(int ac, char **av)
 	get_params(&av[1], &params);
 	coders = malloc(sizeof(t_coder) * params.nb_of_coders);
 	initialization(&params, coders, &monitor);
-	join_coder(coders, monitor);
+	pthread_join(monitor, NULL);
 	free_and_destroys(coders);
 }
