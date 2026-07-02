@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 15:13:40 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/16 17:41:25 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/07/02 17:25:30 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,10 @@ bool	check_params(int ac, char **av)
 		return (false);
 	}
 	if (!strcmp(av[1], "0") || !strcmp(av[1], "-0"))
+	{
 		fprintf(stderr, "Number of coders should be at least one\n");
+		return (false);
+	}
 	i = 1;
 	while (i < 8)
 	{

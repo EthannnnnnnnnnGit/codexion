@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 10:34:12 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/30 17:34:49 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/07/02 18:12:50 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,10 @@ void	waking_time(t_coder *coder, struct timespec *time, int dongle_cooldown)
 	long long		burnout;
 	int				cooldown;
 
+	pthread_mutex_lock(&coder->mutex_compile);
 	burnout = (coder->global->params->time_burnout
 			- (get_time(coder->global->time) - coder->last_compiled));
+	pthread_mutex_unlock(&coder->mutex_compile);
 	dongle_cooldown = dongle_cooldown - get_time(coder->global->time);
 	if (burnout <= 0)
 		burnout = 0;
@@ -73,6 +75,9 @@ int	compiling(t_coder *coder)
 	pthread_mutex_lock(&coder->global->print_mutex);
 	printf("%lli %i is compiling\n", get_time(coder->global->time), coder->id);
 	pthread_mutex_unlock(&coder->global->print_mutex);
+	pthread_mutex_lock(&coder->mutex_compile);
+	coder->last_compiled = get_time(coder->global->time);
+	pthread_mutex_unlock(&coder->mutex_compile);
 	usleep(1000 * coder->global->params->time_compile);
 	pthread_mutex_lock(&coder->mutex_compile);
 	coder->nb_compiled++;
@@ -90,9 +95,6 @@ int	compiling(t_coder *coder)
 	coder->first_dongle->queue[0] = coder->first_dongle->queue[1];
 	coder->first_dongle->queue[1] = NULL;
 	pthread_mutex_unlock(&coder->first_dongle->mutex_queue);
-	pthread_mutex_lock(&coder->mutex_compile);
-	coder->last_compiled = get_time(coder->global->time);
-	pthread_mutex_unlock(&coder->mutex_compile);
 	pthread_mutex_lock(&coder->first_dongle->mutex_queue);
 	pthread_cond_broadcast(&coder->first_dongle->dongle_cond);
 	pthread_mutex_unlock(&coder->first_dongle->mutex_queue);
@@ -144,11 +146,14 @@ int	taking(t_coder *coder, t_dongle *dongle)
 		pthread_mutex_unlock(&dongle->mutex_cooldown);
 		pthread_cond_timedwait(&dongle->dongle_cond,
 			&dongle->mutex_queue, &waking);	
+		pthread_mutex_lock(&coder->mutex_compile);
 		if (get_time(coder->global->time) - coder->last_compiled >= coder->global->params->time_burnout)
 		{
+			pthread_mutex_unlock(&coder->mutex_compile);
 			pthread_mutex_unlock(&dongle->mutex_queue);
 			return (1);
 		}
+		pthread_mutex_unlock(&coder->mutex_compile);
 		pthread_mutex_lock(&dongle->mutex_cooldown);
 	}
 	pthread_mutex_unlock(&dongle->mutex_cooldown);

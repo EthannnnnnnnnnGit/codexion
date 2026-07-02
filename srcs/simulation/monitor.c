@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/24 09:33:01 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/30 16:09:43 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/07/02 12:40:42 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ static int	detect_burnout(t_coder *coders)
 			pthread_mutex_unlock(&coders[i].global->print_mutex);
 			return (1);
 		}
+		// printf("coder: %i, compile: %i\n", coders[i].id, coders[i].nb_compiled);
 		if (coders[i].nb_compiled >= coders[i].global->params->nb_compiles)
 			finished++;
 		pthread_mutex_unlock(&coders[i].mutex_compile);
@@ -75,6 +76,7 @@ void	*monitoring(void *arg)
 		{
 			return (NULL);
 		}
+		usleep(1000);
 	}
 	return (NULL);
 }
