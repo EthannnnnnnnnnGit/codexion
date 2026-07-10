@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 10:34:12 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/07/02 18:12:50 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/07/08 14:01:49 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,16 +86,12 @@ int	compiling(t_coder *coder)
 	pthread_mutex_lock(&coder->second_dongle->mutex_queue);
 	coder->second_dongle->queue[0] = coder->second_dongle->queue[1];
 	coder->second_dongle->queue[1] = NULL;
-	pthread_mutex_unlock(&coder->second_dongle->mutex_queue);
-	pthread_mutex_lock(&coder->second_dongle->mutex_queue);
 	pthread_cond_broadcast(&coder->second_dongle->dongle_cond);
 	pthread_mutex_unlock(&coder->second_dongle->mutex_queue);
 	pthread_mutex_unlock(&coder->first_dongle->mutex_dongle);
 	pthread_mutex_lock(&coder->first_dongle->mutex_queue);
 	coder->first_dongle->queue[0] = coder->first_dongle->queue[1];
 	coder->first_dongle->queue[1] = NULL;
-	pthread_mutex_unlock(&coder->first_dongle->mutex_queue);
-	pthread_mutex_lock(&coder->first_dongle->mutex_queue);
 	pthread_cond_broadcast(&coder->first_dongle->dongle_cond);
 	pthread_mutex_unlock(&coder->first_dongle->mutex_queue);
 	return (0);
