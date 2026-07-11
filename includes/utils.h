@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/15 17:30:34 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/30 15:34:57 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/07/11 17:23:57 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 typedef struct s_dongle	t_dongle;
 typedef struct s_global	t_global;
-typedef struct s_coder t_coder;
+typedef struct s_coder	t_coder;
 
 typedef struct s_global
 {

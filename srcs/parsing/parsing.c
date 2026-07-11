@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 15:13:40 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/07/02 17:25:30 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/07/11 17:34:43 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,18 +44,14 @@ static bool	is_valid_number(char *param, const char *error)
 	return (true);
 }
 
-bool	check_params(int ac, char **av)
+bool	is_valid_args(int ac, char **av)
 {
-	int			i;
-	const char	*errors[] = {"Number of coders", "Time_to_burnout",
-		"Time_to_compile", "Time to debug", "Time to refactor",
-		"Number of compiles required", "Dongle cooldown"};
-
 	if (ac != 9)
 	{
-		fprintf(stderr, "Invalid number of args. Args should be in the following "
-			"format: number_of_coders time_to_burnout time_to_compile time_to_debug "
-			"time_to_refactor number_of_compiles_required dongle_cooldown scheduler\n");
+		fprintf(stderr, "Invalid number of args. Args should be "
+			"in the following format: number_of_coders time_to_burnout "
+			"time_to_compile time_to_debug time_to_refactor "
+			"number_of_compiles_required dongle_cooldown scheduler\n");
 		return (false);
 	}
 	if (!strcmp(av[1], "0") || !strcmp(av[1], "-0"))
@@ -63,6 +59,18 @@ bool	check_params(int ac, char **av)
 		fprintf(stderr, "Number of coders should be at least one\n");
 		return (false);
 	}
+	return (true);
+}
+
+bool	check_params(int ac, char **av)
+{
+	int			i;
+	const char	*errors[] = {"Number of coders", "Time_to_burnout",
+		"Time_to_compile", "Time to debug", "Time to refactor",
+		"Number of compiles required", "Dongle cooldown"};
+
+	if (!is_valid_args(ac, av))
+		return (false);
 	i = 1;
 	while (i < 8)
 	{

@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 10:34:12 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/07/08 14:01:49 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/07/11 17:17:44 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,16 @@ long long	get_time(long long start)
 	return (time - start);
 }
 
+void	release_dongle(t_dongle *dongle)
+{
+	pthread_mutex_unlock(&dongle->mutex_dongle);
+	pthread_mutex_lock(&dongle->mutex_queue);
+	dongle->queue[0] = dongle->queue[1];
+	dongle->queue[1] = NULL;
+	pthread_cond_broadcast(&dongle->dongle_cond);
+	pthread_mutex_unlock(&dongle->mutex_queue);
+}
+
 int	compiling(t_coder *coder)
 {
 	pthread_mutex_lock(&coder->global->burn_mutex);
@@ -82,18 +92,8 @@ int	compiling(t_coder *coder)
 	pthread_mutex_lock(&coder->mutex_compile);
 	coder->nb_compiled++;
 	pthread_mutex_unlock(&coder->mutex_compile);
-	pthread_mutex_unlock(&coder->second_dongle->mutex_dongle);
-	pthread_mutex_lock(&coder->second_dongle->mutex_queue);
-	coder->second_dongle->queue[0] = coder->second_dongle->queue[1];
-	coder->second_dongle->queue[1] = NULL;
-	pthread_cond_broadcast(&coder->second_dongle->dongle_cond);
-	pthread_mutex_unlock(&coder->second_dongle->mutex_queue);
-	pthread_mutex_unlock(&coder->first_dongle->mutex_dongle);
-	pthread_mutex_lock(&coder->first_dongle->mutex_queue);
-	coder->first_dongle->queue[0] = coder->first_dongle->queue[1];
-	coder->first_dongle->queue[1] = NULL;
-	pthread_cond_broadcast(&coder->first_dongle->dongle_cond);
-	pthread_mutex_unlock(&coder->first_dongle->mutex_queue);
+	release_dongle(coder->second_dongle);
+	release_dongle(coder->first_dongle);
 	return (0);
 }
 
@@ -211,6 +211,8 @@ void	*simulation(void *arg)
 	pthread_mutex_unlock(&coder->global->start_mutex);
 	pthread_mutex_lock(&coder->mutex_compile);
 	coder->last_compiled = get_time(coder->global->time);
+	if (coder->id % 2 == 0)
+		usleep(1000);
 	pthread_mutex_unlock(&coder->mutex_compile);
 	while (coder->global->params->nb_compiles > coder->nb_compiled)
 	{
