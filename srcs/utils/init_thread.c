@@ -6,14 +6,14 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 10:10:42 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/06/30 15:35:17 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/07/12 13:51:33 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/coders.h"
-#include "../../includes/parsing.h"
-#include "../../includes/simulation.h"
-#include "../../includes/utils.h"
+#include "coders.h"
+#include "parsing.h"
+#include "simulation.h"
+#include "utils.h"
 #include <sys/time.h>
 
 static void	link_dongle(t_coder *coders)

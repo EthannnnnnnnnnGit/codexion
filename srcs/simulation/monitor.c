@@ -33,7 +33,7 @@ void	alarm_burnout(t_coder *coders, int i)
 	pthread_mutex_unlock(&coders[0].global->burn_mutex);
 	pthread_mutex_lock(&coders[i].global->print_mutex);
 	printf("%lli %i burned out\n",
-	get_time(coders[i].global->time), coders[i].id);
+			get_time(coders[i].global->time), coders[i].id);
 	wait_coders(coders);
 	pthread_mutex_unlock(&coders[i].global->print_mutex);
 }
