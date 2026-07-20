@@ -6,11 +6,24 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 15:13:40 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/07/11 17:34:43 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/07/20 10:30:59 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/parsing.h"
+
+static int	get_sign(char *param, int *i)
+{
+	int	sign;
+
+	sign = 1;
+	if (param[*i] == '+' || param[*i] == '-')
+	{
+		if (param[*i++] == '-')
+			sign *= -1;
+	}
+	return (sign);
+}
 
 static bool	is_valid_number(char *param, const char *error)
 {
@@ -19,13 +32,8 @@ static bool	is_valid_number(char *param, const char *error)
 	unsigned int	result;
 
 	i = 0;
-	sign = 1;
 	result = 0;
-	if (param[i] == '+' || param[i] == '-')
-	{
-		if (param[i++] == '-')
-			sign *= -1;
-	}
+	sign = get_sign(param, &i);
 	while (param[i])
 	{
 		if (!(param[i] >= '0' && param[i] <= '9'))

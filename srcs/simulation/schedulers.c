@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/16 16:25:14 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/07/12 14:03:28 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/07/20 09:18:04 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 void	edf(t_coder *coder, t_dongle *dongle)
 {
-	unsigned int compiled;
+	unsigned int	compiled;
 
 	compiled = 2147483648;
 	pthread_mutex_lock(&dongle->mutex_queue);

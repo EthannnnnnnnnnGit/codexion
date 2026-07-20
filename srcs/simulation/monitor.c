@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/24 09:33:01 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/07/11 17:40:00 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/07/20 09:59:11 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	alarm_burnout(t_coder *coders, int i)
 	pthread_mutex_unlock(&coders[0].global->burn_mutex);
 	pthread_mutex_lock(&coders[i].global->print_mutex);
 	printf("%lli %i burned out\n",
-			get_time(coders[i].global->time), coders[i].id);
+		get_time(coders[i].global->time), coders[i].id);
 	wait_coders(coders);
 	pthread_mutex_unlock(&coders[i].global->print_mutex);
 }
@@ -83,7 +83,7 @@ void	*monitoring(void *arg)
 		{
 			return (NULL);
 		}
-		usleep(1000);
+		usleep(2000);
 	}
 	return (NULL);
 }
