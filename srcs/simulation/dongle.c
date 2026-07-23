@@ -6,18 +6,19 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/20 11:05:55 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/07/20 11:15:20 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/07/23 17:06:50 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "simulation.h"
 #include "utils.h"
 
-void	release_dongle(t_dongle *dongle)
+void	release_dongle(t_coder *coder, t_dongle *dongle)
 {
 	pthread_mutex_unlock(&dongle->mutex_dongle);
 	pthread_mutex_lock(&dongle->mutex_queue);
-	dongle->queue[0] = dongle->queue[1];
+	if (dongle->queue[0] == coder)
+		dongle->queue[0] = dongle->queue[1];
 	dongle->queue[1] = NULL;
 	pthread_cond_broadcast(&dongle->dongle_cond);
 	pthread_mutex_unlock(&dongle->mutex_queue);
@@ -50,13 +51,13 @@ int	taking(t_coder *coder, t_dongle *dongle)
 	}
 	pthread_mutex_unlock(&dongle->mutex_cooldown);
 	pthread_mutex_unlock(&dongle->mutex_queue);
-	pthread_mutex_lock(&coder->global->burn_mutex);
+	pthread_mutex_lock(&coder->global->end_mutex);
 	if (coder->global->has_burnout)
 	{
-		pthread_mutex_unlock(&coder->global->burn_mutex);
+		pthread_mutex_unlock(&coder->global->end_mutex);
 		return (1);
 	}
-	pthread_mutex_unlock(&coder->global->burn_mutex);
+	pthread_mutex_unlock(&coder->global->end_mutex);
 	pthread_mutex_lock(&dongle->mutex_dongle);
 	return (0);
 }

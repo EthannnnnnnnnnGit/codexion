@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/24 09:33:01 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/07/20 09:59:11 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/07/23 17:38:58 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,14 @@ static void	wait_coders(t_coder *coders)
 void	alarm_burnout(t_coder *coders, int i)
 {
 	pthread_mutex_unlock(&coders[i].mutex_compile);
-	pthread_mutex_lock(&coders[0].global->burn_mutex);
+	pthread_mutex_lock(&coders[0].global->end_mutex);
 	coders[0].global->has_burnout = true;
-	pthread_mutex_unlock(&coders[0].global->burn_mutex);
+	pthread_mutex_unlock(&coders[0].global->end_mutex);
 	pthread_mutex_lock(&coders[i].global->print_mutex);
 	printf("%lli %i burned out\n",
 		get_time(coders[i].global->time), coders[i].id);
-	wait_coders(coders);
 	pthread_mutex_unlock(&coders[i].global->print_mutex);
+	wait_coders(coders);
 }
 
 static int	detect_burnout(t_coder *coders)
@@ -61,6 +61,9 @@ static int	detect_burnout(t_coder *coders)
 	}
 	if (finished == i)
 	{
+		pthread_mutex_lock(&coders[0].global->end_mutex);
+		coders[0].global->ended = true;
+		pthread_mutex_unlock(&coders[0].global->end_mutex);
 		wait_coders(coders);
 		return (1);
 	}

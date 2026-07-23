@@ -6,7 +6,7 @@
 /*   By: eel-kerc <eel-kerc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/15 17:30:34 by eel-kerc          #+#    #+#             */
-/*   Updated: 2026/07/11 17:23:57 by eel-kerc         ###   ########.fr       */
+/*   Updated: 2026/07/23 17:07:21 by eel-kerc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,10 @@ typedef struct s_global
 	long long		time;
 	int				has_burnout;
 	bool			started;
+	bool			ended;
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	start_mutex;
-	pthread_mutex_t	burn_mutex;
+	pthread_mutex_t	end_mutex;
 	pthread_cond_t	start_cond;
 }	t_global;
 
@@ -59,6 +60,6 @@ typedef struct s_coder
 	t_global		*global;
 }	t_coder;
 
-void	initialization(t_params *params, t_coder *coders, pthread_t *monitor);
+int	initialization(t_params *params, t_coder *coders, pthread_t *monitor);
 
 #endif
